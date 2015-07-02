@@ -10,14 +10,24 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
  *= require bootstrap
+ *= require_tree .
  *= require_self
  */
 
+.navbar-container {
+ padding: 0 20px;  
+}
 
-html, body, #map-canvas {
-  height: 100%;
-  margin: 0;
+a.navbar-brand {
   padding: 0;
-  }
+  font-size: 46px;
+  line-height: 46px;
+  font-weight: 800;
+  font-family: 'Permanent Marker', 'Sigmar One';
+}
+
+.navbar {
+  border-bottom: 1px solid grey;
+  margin: 0;
+}

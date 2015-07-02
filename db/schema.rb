@@ -21,10 +21,10 @@ ActiveRecord::Schema.define(version: 20150701003245) do
     t.string   "iata"
     t.string   "iso"
     t.binary   "status"
-    t.string   "typey"
     t.string   "continent"
     t.float    "lon"
     t.float    "lat"
+    t.string   "size"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

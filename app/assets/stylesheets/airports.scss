@@ -1,3 +1,36 @@
 // Place all the styles related to the airports controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  position: absolute;
+  top: 50px;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.map-row {
+  height: 100%;
+  padding: 0;
+  max-height: 650px;
+}
+
+.full-height {
+  height:100%;
+}
+
+#map-canvas {
+  height: 100%;
+}
+
+.black {
+  background-color: #000000;
+}

@@ -1,6 +1,6 @@
 class AirportsController < ApplicationController
 
   def index
-    gon.airports = Airport.limit(10)
+    gon.airports = Airport.large
   end
 end

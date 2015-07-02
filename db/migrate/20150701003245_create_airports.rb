@@ -5,10 +5,10 @@ class CreateAirports < ActiveRecord::Migration
       t.string :iata
       t.string :iso
       t.binary :status
-      t.string :typey
       t.string :continent
       t.float :lon
       t.float :lat
+      t.string :size
       t.timestamps null: false
     end
   end

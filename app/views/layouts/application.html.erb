@@ -8,10 +8,17 @@
   <%= csrf_meta_tags %>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBahxJ2y-HTDaZJB4sv5qMIKYfwbw9vu94">
   </script>
+  <link href='http://fonts.googleapis.com/css?family=Permanent+Marker|Sigmar+One' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 </head>
 <body>
 
+
+<%= render 'layouts/navbar' %>
+<%= render 'layouts/flash_messages' %>
+
 <%= yield %>
+
 
 </body>
 </html>

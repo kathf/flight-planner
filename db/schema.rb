@@ -11,20 +11,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701003245) do
+ActiveRecord::Schema.define(version: 20150703051038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "airports", force: :cascade do |t|
-    t.string   "name"
+    t.string   "fs"
     t.string   "iata"
-    t.string   "iso"
-    t.binary   "status"
-    t.string   "continent"
-    t.float    "lon"
-    t.float    "lat"
-    t.string   "size"
+    t.string   "icao"
+    t.string   "name"
+    t.string   "city"
+    t.string   "city_code"
+    t.string   "country_code"
+    t.string   "country_name"
+    t.string   "region_name"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "elevation_feet"
+    t.integer  "classification"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "routes", force: :cascade do |t|
+    t.integer  "destination_id"
+    t.integer  "origin_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "stopovers", force: :cascade do |t|
+    t.integer  "airport_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

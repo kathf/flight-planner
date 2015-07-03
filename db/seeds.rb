@@ -1,14 +1,30 @@
-JSON.parse(File.read("db/airports.json")).each do |hash|
-  if hash["type"] == "airport"
-    Airport.create!(
-    iata: hash["iata"],
-    lon: hash["lon"],
-    iso: hash["iso"],
-    status: hash["status"],
-    name: hash["name"],
-    continent: hash["continent"],
-    size: hash["size"],
-    lat: hash["lat"]
-    )
+require 'csv'
+
+airports_array = FlightStats::Airport.actives
+
+airports_array.each do |airport|
+  Airport.create!(
+    fs: airport.fs,
+    iata: airport.iata,
+    icao: airport.icao,
+    name: airport.name,
+    city: airport.city,
+    city_code: airport.city_code,
+    country_code: airport.country_code,
+    country_name: airport.country_name,
+    region_name: airport.region_name,
+    latitude: airport.latitude,
+    longitude: airport.longitude,
+    elevation_feet: airport.elevation_feet,
+    classification: airport.classification
+  )
+end
+
+CSV.foreach("db/seeds/routes3.csv", :headers => true) do |row|
+  row_hash = row.to_hash
+  set_origin = Airport.find_by(iata: row_hash["origin"])
+  set_dest = Airport.find_by(iata: row_hash["destination"])
+  if set_origin && set_dest
+    Route.find_or_create_by!(destination_id: set_dest.id, origin_id: set_origin.id)
   end
 end

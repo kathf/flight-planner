@@ -1,5 +1,7 @@
 class Airport < ActiveRecord::Base
-  scope :large, -> { where(size: "large") }
-  scope :medium, -> { where(size: "medium") }
-  scope :small, -> { where(size: "small") }
+  has_one :origin, class_name: 'Route', foreign_key: 'origin_id'
+  has_one :destination, class_name: 'Route', foreign_key: 'destination_id'
+
+  validates :iata, :icao, :name, :city, :city_code, :country_code, :country_name, :region_name, :latitude, :longitude, presence: true
+
 end

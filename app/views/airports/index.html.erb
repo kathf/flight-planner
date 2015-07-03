@@ -2,7 +2,14 @@
   <div class="row map-row">
 
     <div class="col-sm-3">
-
+      <div class="origin-dest-form">
+        <%= simple_form_for @origin, html: {class: "form-horizontal"}, remote: true do |f| %>
+          <%= f.input @origin %>
+          <%= f.input @destination %>
+          <%= f.button :submit %>
+        <% end %>
+        <%= debug params %>
+      </div>
     </div>
 
     <div class="col-sm-9 full-height">

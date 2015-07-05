@@ -4,6 +4,14 @@ class Route < ActiveRecord::Base
 
   validates :destination_id, :origin_id, presence: true
 
+  def leave_from(start)
+    where('origin_id = ?', start).pluck(:destination_id)
+  end
+
+  def go_to(finish)
+    where('destination_id = ?', finish).pluck(:origin_id)
+  end
+
   def self.find_stopovers(start, finish)
     stopovers = where('origin_id = ?', start).pluck(:destination_id) & where('destination_id = ?', finish).pluck(:origin_id)
     if stopovers.empty?

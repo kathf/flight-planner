@@ -1,8 +1,21 @@
-class AirportsController < ApplicationController
-  # before_action :set_origin, only: :index
+class WaysController < ApplicationController
+
+  def get_location
+    @current_location = [
+      params[:lat],
+      params[:lon]
+    ]
+    @origin = Airport.closest( origin: @current_location )
+    byebug
+    redirect_to action: :index
+  end
+
+  def new
+    @way = Way.new
+  end
 
   def index
-    @origin = Airport.find(1)
+    @way = Way.new
     # stopover_airports = Stopover.stopover_relation(@origin, @destination)
     #
     # # gon gem used to send data to js files
@@ -21,14 +34,18 @@ class AirportsController < ApplicationController
     # end
   end
 
-  private
-
-  def set_origin
-    @origin = Airport.find(params[:id])
+  def create
+    @way = Way.create!(way_params)
   end
 
-  def set_destination
-    @destination = Airport.find(params[:id])
+  def update
+    @way = Way.update_attributes!(way_params)
+  end
+
+  private
+
+  def way_params
+    params.require(:way).permit(:origin_id, :destination_id)
   end
 
 end

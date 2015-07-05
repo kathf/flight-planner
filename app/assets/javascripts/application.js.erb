@@ -4,6 +4,28 @@
 //= require bootstrap
 //= require_tree .
 
+
+function setLocation() {
+  // create marker for closest airport based on HTML5 geolocation (if allowed)
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+      // send current location to controller and calculate closest airport and set as @ways.origin
+      console.log(currentLocation);
+      console.log(position.coords.longitude);
+      console.log(position.coords.latitude);
+
+      $.ajax({
+        type: 'post',
+        url: '/ways/get_location',
+        dataType: 'json',
+        data: { 'lat': position.coords.latitude,  'lon': position.coords.longitude }
+      });
+    });
+  };
+}
+
 function initializeMap() {
   var myStyles = [
     {
@@ -56,13 +78,13 @@ function initializeMap() {
       myOptions);
 }
 
-// function createOrigDestMarkers() {
-//   // create marker for closest airport based on HTML5 geolocation (if allowed)
-//   if(navigator.geolocation) {
-//     navigator.geolocation.getCurrentPosition(function(position) {
-//       var pos = new google.maps.LatLng(position.coords.latitude,
-//                                        position.coords.longitude);
-// }
+function createOriginMarkers() {
+  var marker = new google.maps.Marker({
+      position: pos,
+      map: map,
+      name: "you are here"
+  });
+}
 
 function createStopoverMarkers() {
   var airportDetails = gon.airports;
@@ -104,6 +126,13 @@ function createStopoverMarkers() {
   };
 }
 
+$(document).ready(function() {
+  console.log("document ready");
+  setLocation();
+});
+
+
 $(window).load(function () {
+  console.log("window load");
   initializeMap();
 });

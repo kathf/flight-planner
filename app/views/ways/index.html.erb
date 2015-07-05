@@ -3,12 +3,11 @@
 
     <div class="col-sm-3">
       <div class="origin-dest-form">
-        <%= simple_form_for @origin, html: {class: "form-horizontal"}, remote: true do |f| %>
-          <%= f.input @origin %>
-          <%= f.input @destination %>
-          <%= f.button :submit %>
+        <%= form_for @way, remote: true do |f| %>
+          <%= f.text_field :origin_id, placeholder: "origin", class: "form-control centre-block", id: "input-origin" %>
+          <%= f.text_field :destination_id, placeholder: "destination", class: "form-control" %>
+          <%= f.submit "Find your way", class: "btn btn-default" %>
         <% end %>
-        <%= debug params %>
       </div>
     </div>
 

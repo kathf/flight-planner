@@ -11,10 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150703051038) do
+ActiveRecord::Schema.define(version: 20150705072542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "cube"
+  enable_extension "earthdistance"
 
   create_table "airports", force: :cascade do |t|
     t.string   "fs"
@@ -45,6 +47,14 @@ ActiveRecord::Schema.define(version: 20150703051038) do
     t.integer  "airport_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "ways", force: :cascade do |t|
+    t.integer  "destination_id"
+    t.integer  "origin_id"
+    t.integer  "stopovers_array", default: [],              array: true
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
   end
 
 end

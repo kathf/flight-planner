@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AirportsControllerTest < ActionController::TestCase
+class WayTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

@@ -6,7 +6,7 @@ gem "flightstats-flex", "~> 0.3.0"
 source 'https://rails-assets.org' do
   gem 'rails-assets-bootstrap'
 end
-
+gem 'geokit-rails'
 gem 'rails_12factor', group: :production
 gem 'gon'
 gem 'simple_form'

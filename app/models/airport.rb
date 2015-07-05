@@ -4,4 +4,9 @@ class Airport < ActiveRecord::Base
 
   validates :iata, :icao, :name, :city, :city_code, :country_code, :country_name, :region_name, :latitude, :longitude, presence: true
 
+  acts_as_mappable :default_units => :kms,
+                   :default_formula => :sphere,
+                   :distance_field_name => :distance,
+                   :lat_column_name => :latitude,
+                   :lng_column_name => :longitude
 end

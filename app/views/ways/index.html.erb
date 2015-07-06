@@ -3,9 +3,9 @@
 
     <div class="col-sm-3">
       <div class="origin-dest-form">
-        <%= form_for @way, remote: true do |f| %>
-          <%= f.text_field :origin_id, placeholder: "origin", class: "form-control centre-block", id: "input-origin" %>
-          <%= f.text_field :destination_id, placeholder: "destination", class: "form-control" %>
+        <%= simple_form_for @way, remote: true do |f| %>
+          <%= f.input :origin_id, collection: @airports, class: "form-control centre-block", id: "input-origin" %>
+          <%= f.input :destination_id, collection: @airports, class: "form-control" %>
           <%= f.submit "Find your way", class: "btn btn-default" %>
         <% end %>
       </div>

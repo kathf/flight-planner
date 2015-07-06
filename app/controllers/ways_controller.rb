@@ -1,21 +1,16 @@
 class WaysController < ApplicationController
+  before_filter :set_location
 
-  def get_location
-    @current_location = [
-      params[:lat],
-      params[:lon]
-    ]
-    @origin = Airport.closest( origin: @current_location )
-    byebug
-    redirect_to action: :index
-  end
-
-  def new
-    @way = Way.new
+  # this method won't work as a private method...why not?
+  def set_location
+    @current_location = [ params[:lat], params[:lon] ]
+    @origin_airport_id = Airport.closest(origin: @current_location)[0].id
+    # redirect_to action: :index
   end
 
   def index
-    @way = Way.new
+    @way = Way.create!(origin_id: @origin_airport_id)
+    byebug
     # stopover_airports = Stopover.stopover_relation(@origin, @destination)
     #
     # # gon gem used to send data to js files

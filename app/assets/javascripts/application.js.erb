@@ -6,25 +6,20 @@
 
 
 function setLocation() {
-  // create marker for closest airport based on HTML5 geolocation (if allowed)
+  // send current location to controller and calculate closest airport and set as @ways.origin
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      var currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-      // send current location to controller and calculate closest airport and set as @ways.origin
-      console.log(currentLocation);
-      console.log(position.coords.longitude);
-      console.log(position.coords.latitude);
-
       $.ajax({
         type: 'post',
-        url: '/ways/get_location',
+        url: '/ways/set_location',
         dataType: 'json',
         data: { 'lat': position.coords.latitude,  'lon': position.coords.longitude }
       });
     });
   };
 }
+
+  // Also need to create marker for closest airport based on HTML5 geolocation (if allowed)
 
 function initializeMap() {
   var myStyles = [

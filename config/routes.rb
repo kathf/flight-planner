@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  post 'ways/get_location'
-  root 'ways#get_location'
+  post 'ways/set_location'
+  root 'ways#index'
 
   resources :ways
 

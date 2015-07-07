@@ -3,11 +3,6 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
 
 .content {
   position: absolute;
@@ -20,8 +15,9 @@ html, body {
 
 .map-row {
   height: 100%;
-  padding: 0;
   max-height: 650px;
+  padding: 0px;
+  margin: 0;
 }
 
 .full-height {
@@ -34,4 +30,10 @@ html, body {
 
 .black {
   background-color: #000000;
+}
+
+.origin-dest-form {
+  label {
+    color: white;
+  }
 }

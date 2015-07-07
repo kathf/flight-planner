@@ -1,20 +1,15 @@
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 //= require bootstrap
 //= require_tree .
 
 
-function setLocation() {
+var setLocation = function () {
   // send current location to controller and calculate closest airport and set as @ways.origin
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      $.ajax({
-        type: 'post',
-        url: '/ways/set_location',
-        dataType: 'json',
-        data: { 'lat': position.coords.latitude,  'lon': position.coords.longitude }
-      });
+      var cookie_val = position.coords.latitude + "|" + position.coords.longitude;
+      document.cookie = "lat_lng=" + escape(cookie_val);
     });
   };
 }
@@ -121,11 +116,11 @@ function createStopoverMarkers() {
   };
 }
 
+setLocation();
+
 $(document).ready(function() {
   console.log("document ready");
-  setLocation();
 });
-
 
 $(window).load(function () {
   console.log("window load");

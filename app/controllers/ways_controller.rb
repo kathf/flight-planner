@@ -1,16 +1,17 @@
 class WaysController < ApplicationController
-  before_filter :set_location
+  before_action :set_location, only: [:index]
 
   # this method won't work as a private method...why not?
   def set_location
-    @current_location = [ params[:lat], params[:lon] ]
-    @origin_airport_id = Airport.closest(origin: @current_location)[0].id
-    # redirect_to action: :index
+    current_location = cookies[:lat_lng].split("|")
+    @origin_airport = Airport.closest(origin: current_location)[0] # query returns array so select first element
   end
 
   def index
-    @way = Way.create!(origin_id: @origin_airport_id)
-    byebug
+    Way.delete_all
+    @way = Way.create!(origin: @origin_airport)
+    @airports = Airport.all.order(:country_name, :city, :name).limit(5)
+    
     # stopover_airports = Stopover.stopover_relation(@origin, @destination)
     #
     # # gon gem used to send data to js files
@@ -27,6 +28,7 @@ class WaysController < ApplicationController
     #     longitude: a.longitude
     #   }
     # end
+
   end
 
   def create

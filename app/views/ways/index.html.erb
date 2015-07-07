@@ -4,8 +4,8 @@
     <div class="col-sm-3">
       <div class="origin-dest-form">
         <%= simple_form_for @way, remote: true do |f| %>
-          <%= f.input :origin_id, collection: @airports, class: "form-control centre-block", id: "input-origin" %>
-          <%= f.input :destination_id, collection: @airports, class: "form-control" %>
+          <%= f.input :origin, collection: @airports, label_method: lambda { |a| "#{a.name} (#{a.iata}) | #{a.city}, #{a.country_name}"} %>
+          <%= f.input :destination, collection: @airports, label_method: lambda { |a| "#{a.name} (#{a.iata}) | #{a.city}, #{a.country_name}"} %>
           <%= f.submit "Find your way", class: "btn btn-default" %>
         <% end %>
       </div>

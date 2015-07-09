@@ -14,11 +14,14 @@ class Route < ActiveRecord::Base
 
   def self.find_stopovers(start, finish)
     stopovers = where('origin_id = ?', start).pluck(:destination_id) & where('destination_id = ?', finish).pluck(:origin_id)
+
+    #seta = Set.new(where('origin_id = ?', start).pluck(:destination_id))
+
     if stopovers.empty?
      ["No stopovers for this selection"]
     else
       return stopovers #returns an array of airport ids which connects the start airport and finish airport (entered as ids)
     end
   end
-  
+
 end

@@ -4,8 +4,8 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'ways#index'
-  post 'ways/set_location', to: 'ways#set_location'
 
+  resources :airports
 
 
   resources :ways

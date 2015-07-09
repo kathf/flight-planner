@@ -12,6 +12,10 @@ class WaysController < ApplicationController
     Way.delete_all
     @way = Way.create!(origin: @origin_airport)
     @stopovers = Stopover.stopover_relation({orig: @origin_airport}) #confusingly, this is actually an AR relation of stopover objects
+
+    # @query = WayCalculator.new(@origin, @destination).calculate
+    # In the view @query.results.each ...
+
     gon.origin = @origin_airport #use gon gem to send data to javascript
     gon.airportMarkers = @stopovers
   end

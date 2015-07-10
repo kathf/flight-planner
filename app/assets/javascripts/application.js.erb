@@ -4,7 +4,7 @@
 //= require_tree .
 
 
-// send current location to controller and calculate closest airport and set as @ways.origin
+// send user's location to controller and calculate closest airport and set as @ways.origin
 var setLocation = function () {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -12,6 +12,7 @@ var setLocation = function () {
       document.cookie = "lat_lng=" + escape(cookie_val);
     });
   };
+  console.log("location set");
 }
 
 // initialize google map and call function to create marker for origin airport (closest to user's location)
@@ -66,13 +67,20 @@ function initializeMap() {
   var map = new google.maps.Map(document.getElementById("map-canvas"),
       myOptions);
 
-  createOriginMarker(map);
-  createStopoverMarkers(map);
+  console.log("map initialized");
+
+  $.getJSON('ways#index', function(response) {
+    var origin = response.origin;
+    var airportsForMarking = response.airports
+
+    createOriginMarker(map, origin);
+    createStopoverMarkers(map, airportsForMarking);
+  });
+
 }
 
 // create marker for origin airport (closest to user's location)
-function createOriginMarker(map) {
-  var origin = gon.origin
+function createOriginMarker(map, origin) {
   var latLng = new google.maps.LatLng(origin.latitude, origin.longitude);
   var marker = new google.maps.Marker({
       position: latLng,
@@ -84,20 +92,21 @@ function createOriginMarker(map) {
       icon: 'http://maps.google.com/mapfiles/kml/pal3/icon53.png'
   });
   createInfoWindow(marker, map);
+  console.log("origin marker set");
 }
 
 // add event listener to airport marker to display info window when clicked
 function createInfoWindow(marker, map) {
   var contentString =
-    '<div id="infowindow_content">'+
     marker.name+
     ' ('+
     marker.iata+
     ') '+
     marker.city+
     ', '
-    marker.country+
-    '</div>';
+    marker.country;
+
+    'gm-style-iw'
 
   google.maps.event.addListener(marker, 'click', function() {
     var infowindow = new google.maps.InfoWindow({ content: contentString });
@@ -109,32 +118,30 @@ function createInfoWindow(marker, map) {
 }
 
 // create markers for selection of airports sent from ways controller
-function createStopoverMarkers(map) {
-  var airportDetails = gon.airportMarkers;
-  for (var i = 0; i < airportDetails.length; i++) {
-      (function(airportDetails) {
-          console.log(airportDetails);
-          var latLng = new google.maps.LatLng(airportDetails.latitude, airportDetails.longitude);
+function createStopoverMarkers(map, airportsForMarking) {
+  for (var i = 0; i < airportsForMarking.length; i++) {
+      (function(airport) {
+          var latLng = new google.maps.LatLng(airport.latitude, airport.longitude);
 
           var marker = new google.maps.Marker({
               position: latLng,
               map: map,
-              name: airportDetails.name,
-              city: airportDetails.city,
-              iata: airportDetails.iata,
-              country: a.country_name,
+              name: airport.name,
+              city: airport.city,
+              iata: airport.iata,
+              country: airport.country_name,
               icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=glyphish_airplane|FFFFFF'
           });
 
           createInfoWindow(marker, map);
 
-      })(airportDetails[i]);
+      })(airportsForMarking[i]);
   };
+  console.log("stopover markers set");
 }
 
 
 // event listeners
-
 
 setLocation();
 

@@ -5,26 +5,37 @@ class WaysController < ApplicationController
   #get user's location from cookie
   def set_location
     current_location = cookies[:lat_lng].split("|")
-    @origin_airport = Airport.closest(origin: current_location)[0] # query returns array so select first element
+    @origin = Airport.closest(origin: current_location)[0] # query returns array so select first element
+    @way = Way.create!(origin: @origin)
   end
 
   def index
-    Way.delete_all
-    @way = Way.create!(origin: @origin_airport)
-    @stopovers = Stopover.stopover_relation({orig: @origin_airport}) #confusingly, this is actually an AR relation of stopover objects
+    @way = Way.last
+    airports = WayCalculator.new(orig: @origin).calculate_destinations
+    response = { origin: @origin, airports: airports }
+    respond_to do |format|
+      format.html { @way }
+      format.json { render json: response }
+      # Jway UI autocomplete
+    end
 
-    # @query = WayCalculator.new(@origin, @destination).calculate
-    # In the view @query.results.each ...
+    @airports = Airport.all.limit(5) #for dropdown list of airports to select orig/dest from
+    @airports << Airport.find(15913)
+    @airports << Airport.find(268)
 
-    gon.origin = @origin_airport #use gon gem to send data to javascript
-    gon.airportMarkers = @stopovers
+    # @stopovers = Stopover.stopover_relation({orig: @origin}) #confusingly, this is actually an AR relation of stopover objects
   end
 
+  # user inputs origin and destination, returns json of airport results
   def update
     if @way.update_attributes(way_params)
-      #update map with all airport markers
+      puts "WAY UPDATED"
+      results = WayCalculator.new(orig: @way.origin, dest: @way.destination).calculate_stopovers
+      render json: results
     else
-      flash[:notice] = "Invalid selection try again"
+      puts "WAY NOT UPDATED - SOME SORT OF ERROR"
+      flash[:notice] = 'not updated'
+      redirect_to action: :index
     end
   end
 
@@ -35,7 +46,7 @@ class WaysController < ApplicationController
   end
 
   def set_way
-    @way = Way.last
+    @way = Way.find(params[:id])
   end
 
 end

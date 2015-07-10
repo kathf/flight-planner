@@ -3,13 +3,9 @@
 
     <div class="col-sm-3">
       <div class="form-horizontal">
-
         <%= form_for @way, remote: true do |f| %>
-          <!-- <%= f.fields_for :origin do |o| %>
-            <%= o.collection_select :origin_id, @airports, :id, :name, {}, {class: "form-control"} %>
-          <% end %> -->
-          <%= f.collection_select :origin_id, @airports, :id, :name, {}, {class: "form-control"} %>
-          <%= f.collection_select :destination_id, @airports, :id, :name, {}, {class: "form-control"} %>
+          <%= f.collection_select :origin_id, @airports, :id, :name, {}, {class: "form-control", id: "origin-input"} %>
+          <%= f.collection_select :destination_id, @airports, :id, :name, {}, {class: "form-control", id: "destination-input"} %>
           <%= submit_tag "Find your way", class: "btn btn-default" %>
         <% end %>
 

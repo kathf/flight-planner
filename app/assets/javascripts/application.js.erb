@@ -69,7 +69,7 @@ function createOriginMarker(map, origin, infowindow, flightPath) {
 function createInfoWindow(map) {
   console.log("creating info window");
   var infowindow = new google.maps.InfoWindow();
-  google.maps.event.addListener(map, 'click', function() {
+  google.maps.event.addListener(map, 'mouseover', function() {
     infowindow.close();
   });
   return infowindow;
@@ -78,10 +78,13 @@ function createInfoWindow(map) {
 // add listener to marker - when clicked, open infowindow
 function createMarkerListeners(marker, map, infowindow, origin, flightPath) {
   console.log("creating listeners for each marker");
-  google.maps.event.addListener(marker, 'click', function() {
+  google.maps.event.addListener(marker, 'mouseover', function() {
     setFlightPathCoords(flightPath, origin, marker);
     openInfowindow(map, marker, infowindow);
+  });
+  google.maps.event.addListener(marker, 'click', function() {
     $("#destination-input").val(marker.id);
+    $(".edit_way").submit();
   });
 }
 
@@ -94,8 +97,9 @@ function openInfowindow(map, marker, infowindow) {
 
 function styleInfowindow(infowindow) {
   console.log("infowindow to be styled TODO");
-  var infowindowDiv = $(".gm-style-iw").prev();
-  infowindowDiv.addClass("style-infowindow");
+  var elementsToStyle = $(".gm-style-iw").prev().children();
+  $(".gm-style-iw").next().detach();
+  elementsToStyle.css("border-radius", "25px");
 }
 
 // content string for infowindow
@@ -137,7 +141,7 @@ function createRoutePath(map) {
     strokeOpacity: 1.0,
     strokeWeight: 2
   });
-  google.maps.event.addListener(map, 'click', function() {
+  google.maps.event.addListener(map, 'mouseover', function() {
     flightPath.setVisible(false);
   });
   return flightPath;

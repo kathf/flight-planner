@@ -19,9 +19,9 @@ class WaysController < ApplicationController
       # Jway UI autocomplete
     end
 
-    @airports = Airport.all.limit(5) #for dropdown list of airports to select orig/dest from
-    @airports << Airport.find(15913)
-    @airports << Airport.find(268)
+    @airports = Airport.all #for dropdown list of airports to select orig/dest from
+    # @airports << Airport.find(15913)
+    # @airports << Airport.find(268)
 
     # @stopovers = Stopover.stopover_relation({orig: @origin}) #confusingly, this is actually an AR relation of stopover objects
   end
@@ -29,7 +29,7 @@ class WaysController < ApplicationController
   # user inputs origin and destination, returns json of airport results
   def update
     if @way.update_attributes(way_params)
-      puts "WAY UPDATED"
+      puts "------------- WAY UPDATED ----------------"
       results = WayCalculator.new(orig: @way.origin, dest: @way.destination).calculate_stopovers
       render json: results
     else

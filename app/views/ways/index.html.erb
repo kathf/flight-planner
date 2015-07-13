@@ -5,13 +5,12 @@
       <div class="form-horizontal">
         <%= form_for @way, remote: true do |f| %>
           <%= f.collection_select :origin_id, @airports, :id, :name, {}, {class: "form-control", id: "origin-input"} %>
-          <%= f.collection_select :destination_id, @airports, :id, :name, {}, {class: "form-control", id: "destination-input"} %>
-          <%= submit_tag "Find your way", class: "btn btn-default centre-block" %>
+          <%= f.collection_select :destination_id, @airports, :id, :name, {prompt: "Select your destination"}, {class: "form-control", id: "destination-input"} %>
+          <%= submit_tag "Find your way", class: "btn btn-default" %>
         <% end %>
       </div>
       <div class="instructions">
-          <p class="text-centre"> Select a direct flight route from the map </br> or search for an airport, city or country to create your own multi-stop WAY TO GO
-          </p>
+          <p class="text-centre"> Select from direct-route airports on the map </br> or search for an airport, city or country above to find your WAY TO GO </p>
       </div>
     </div>
 

@@ -20,6 +20,7 @@ airports_array.each do |airport|
   )
 end
 
+# flight data from http://openflights.org/
 CSV.foreach("db/seeds/routes3.csv", :headers => true) do |row|
   row_hash = row.to_hash
   set_origin = Airport.find_by(iata: row_hash["origin"])

@@ -42,3 +42,18 @@
 .style-infowindow div {
   border-radius: 25px;
 }
+
+.instructions {
+  color: #009999;
+}
+
+.form-and-text-column {
+  p, .form-control {
+    margin: 10px auto;
+  }
+  input {
+    margin: 10px auto;
+    background-color: #009999;
+    color: white;
+  }
+}

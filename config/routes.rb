@@ -7,10 +7,9 @@ Rails.application.routes.draw do
 
   resources :airports
 
-
-  resources :ways
-
-
+  resources :ways do
+    get 'set_location', on: :collection
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

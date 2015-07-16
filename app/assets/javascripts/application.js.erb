@@ -175,10 +175,6 @@ function autocomplete(input) {
   $( nameInput ).autocomplete({
     minLength: 2,
     source: "/airports.json",
-    focus: function(event, ui) {
-      $( nameInput ).val(ui.item.name);
-      return false;
-    },
     select: function(event, ui) {
       $( nameInput ).val(ui.item.name);
       $( idInput ).val(ui.item.id);
@@ -188,17 +184,21 @@ function autocomplete(input) {
     .data( "uiAutocomplete" )._renderItem = function( ul, item ) {
     return $( "<li></li>" )
         .data( "item.autocomplete", item )
-    // For now which just want to show the person.given_name in the list.
         .append( "<a>" + item.name + "</a>" )
         .appendTo( ul );
     };
 }
 
-function formSubmit(event) {
-  event.preventDefault();
+
+function formSubmit() {
+  alert("btn clicked");
   $("#origin-name").attr('disabled', 'true');
   $("#destination-name").attr('disabled', 'true');
-  $(this).submit();
+  $('.edit_way').submit();
+}
+
+function revertForm() {
+  alert("form reverted");
   $("#origin-name").removeAttr('disabled');
   $("#destination-name").removeAttr('disabled');
 }
@@ -215,7 +215,11 @@ $(window).load(function () {
   autocomplete("origin");
   autocomplete("destination");
 
-  $(".edit_way").submit( formSubmit(event) );
+  $("#btn-submit").click( function(event) {
+    event.preventDefault();
+    formSubmit();
+    revertForm();
+  });
 
   var origin;
   var map;

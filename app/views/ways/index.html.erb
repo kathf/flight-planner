@@ -12,7 +12,7 @@
           <%= f.fields_for :destination, @way.destination do |d| %>
               <%= d.text_field :name, class: "form-control", id: "destination-name" %>
           <% end %>
-          <%= f.submit value: "Find your way", class: 'btn btn-default' %>
+          <%= f.submit value: "Find your way", class: 'btn btn-default', id: 'btn-submit' %>
         <% end %>
 
       </div>

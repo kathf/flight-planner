@@ -2,4 +2,13 @@ WayToGo
 
 Flight-planning web app using Ruby on Rails, Bootstrap, jQuery and RSpec.
 
-First (failed) attempt here: https://github.com/kathf/waytogo-first-attempt
+- user can see their closest airport on the map
+- user's closest airport automatically appears as the origin input in the form
+- user can see all airports they can fly to directly (no stopovers) on the map
+- user can click on destination airport on map and the form will automatically insert that destination into the form input
+- user can search for an airport name/code, city or country and select one in order to find possible routes to/from that airport
+- user can view possible routes to get between the selected airport and select one
+- user can add another stop and repeat the search / selection process
+
+
+(First attempt of app here: https://github.com/kathf/waytogo-first-attempt)

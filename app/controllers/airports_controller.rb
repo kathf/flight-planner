@@ -1,18 +1,16 @@
-# class AirportsController < ApplicationController
-#
-#   def index
-#     gon.airportMarkers = Airport.limit(5)
-#
-#     # respond_to do |which|
-#     #   which.html do
-#     #     @airports = Airport.limit(5)
-#     #     render partial: 'airport', collection: @airports
-#     #   end
-#     #   which.json do
-#     #     # Jquery UI autocomplete
-#     #     render json: Airport.query(params[:q]).to_json
-#     #   end
-#     # end
-#   end
-#
-# end
+class AirportsController < ApplicationController
+  before_action :get_term
+
+  def index
+    results = AirportQueryHelper.new(@term).name_query
+    respond_to do |format|
+      format.html
+      format.json { render json: results.to_json }
+    end
+  end
+
+  def get_term
+    @term = params[:term]
+  end
+
+end

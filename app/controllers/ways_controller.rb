@@ -1,5 +1,4 @@
 class WaysController < ApplicationController
-  # before_action :set_location, only: [:index]
   before_action :set_way, only: :update
 
   #get user's location from cookie
@@ -15,17 +14,12 @@ class WaysController < ApplicationController
 
   def index
     @way = Way.last
-    @origin = @way.origin
-    @destinations = WayCalculator.new(orig: @origin).calculate_destinations
+    @destinations = WayCalculator.new(orig: @way.origin).calculate_destinations
     response = { destinations: @destinations }
     respond_to do |format|
       format.html { @way }
       format.json { render json: response }
     end
-    @airports = Airport.all.limit(5) #for dropdown list of airports to select orig/dest from
-    @airports << Airport.find(15913)
-    @airports << Airport.find(268)
-    # @stopovers = Stopover.stopover_relation({orig: @origin}) #confusingly, this is actually an AR relation of stopover objects
   end
 
   # user inputs origin and destination, returns json of airport results

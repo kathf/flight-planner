@@ -2,12 +2,19 @@
   <div class="row map-row">
 
     <div class="col-sm-3 form-and-text-column">
-      <div class="form-horizontal">
-        <%= form_for @way, remote: true do |f| %>
-          <%= f.collection_select :origin_id, @airports, :id, :name, {}, {class: "form-control", id: "origin-input"} %>
-          <%= f.collection_select :destination_id, @airports, :id, :name, {prompt: "Select your destination"}, {class: "form-control", id: "destination-input"} %>
-          <%= submit_tag "Find your way", class: "btn btn-default" %>
+      <div>
+        <%= form_for @way, class: "form-horizontal", remote: true do |f| %>
+        <%= f.hidden_field :origin_id, id: "origin-id"  %>
+          <%= f.fields_for :origin, @way.origin do |o| %>
+            <%= o.text_field :name, class: "form-control", id: "origin-name"  %>
+          <% end %>
+          <%= f.hidden_field :destination_id, id: "destination-id" %>
+          <%= f.fields_for :destination, @way.destination do |d| %>
+              <%= d.text_field :name, class: "form-control", id: "destination-name" %>
+          <% end %>
+          <%= f.submit value: "Find your way", class: 'btn btn-default' %>
         <% end %>
+
       </div>
       <div class="instructions">
           <p class="text-centre"> Select from direct-route airports on the map </br> or search for an airport, city or country above to find your WAY TO GO </p>

@@ -1,7 +1,11 @@
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require bootstrap
+//= require turbolinks
+//= require 'airports.js'
 //= require_tree .
+
 
 
 // send user's location to controller and calculate closest airport and set as @ways.origin
@@ -112,7 +116,6 @@ function markerContent(marker) {
 // create markers for selection of airports sent from ways controller
 function createStopoverMarkers(map, destinationsToMark, infowindow, origin, flightPath) {
   console.log("creating stopover markers");
-  console.log(destinationsToMark);
   for (var i = 0; i < destinationsToMark.length; i++) {
       (function(airport) {
           var latLng = new google.maps.LatLng(airport.latitude, airport.longitude);
@@ -139,8 +142,9 @@ function createMarkerListeners(marker, map, infowindow, origin, flightPath) {
     openInfowindow(map, marker, infowindow);
   });
   google.maps.event.addListener(marker, 'click', function() {
-    $("#destination-input").val(marker.id);
-    $(".edit_way").submit();
+    $("#destination-name").val(marker.name);
+    $("#destination-id").val(marker.id);
+    // $(".edit_way").submit();
   });
 }
 
@@ -153,47 +157,65 @@ function setFlightPathCoords(flightPath, origin, marker) {
   flightPath.setPath(flightPlanCoordinates);
 }
 
-// form ".edit_way"
-// input "#destination-input"
-//
-//
-// $( "#destination-input" ).autocomplete({
-//   source: "search.php",
-//   minLength: 2,
-//   select: function( event, ui ) {
-//     log( ui.item ?
-//       "Selected: " + ui.item.value + " aka " + ui.item.id :
-//       "Nothing selected, input was " + this.value );
-//   }
-// });
+function formSetUp( element ) {
+  $( element ).focusin(function() {
+    var presentValue = this.value;
+    this.value = '';
+    $( element ).focusout(function() {
+      if (this.value == "") {
+        this.value = presentValue;
+      }
+    });
+  });
+}
 
+function autocomplete(input) {
+  var nameInput = "#" + input + "-name"
+  var idInput = "#" + input + "-id"
+  $( nameInput ).autocomplete({
+    minLength: 2,
+    source: "/airports.json",
+    focus: function(event, ui) {
+      $( nameInput ).val(ui.item.name);
+      return false;
+    },
+    select: function(event, ui) {
+      $( nameInput ).val(ui.item.name);
+      $( idInput ).val(ui.item.id);
+      return false;
+      }
+    })
+    .data( "uiAutocomplete" )._renderItem = function( ul, item ) {
+    return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+    // For now which just want to show the person.given_name in the list.
+        .append( "<a>" + item.name + "</a>" )
+        .appendTo( ul );
+    };
+}
 
-// function log( message ) {
-//   $( "<div>" ).text( message ).prependTo( "#log" );
-//   $( "#log" ).scrollTop( 0 );
-// }
-//
-// $( "#birds" ).autocomplete({
-//   source: "search.php",
-//   minLength: 2,
-//   select: function( event, ui ) {
-//     log( ui.item ?
-//       "Selected: " + ui.item.value + " aka " + ui.item.id :
-//       "Nothing selected, input was " + this.value );
-//   }
-// });
-
+function formSubmit(event) {
+  event.preventDefault();
+  $("#origin-name").attr('disabled', 'true');
+  $("#destination-name").attr('disabled', 'true');
+  $(this).submit();
+  $("#origin-name").removeAttr('disabled');
+  $("#destination-name").removeAttr('disabled');
+}
 
 //////////// event listeners ///////////////
 
 setLocation();
 
-$(document).ready(function() {
-  console.log("document ready");
-});
-
 $(window).load(function () {
   console.log("window load");
+
+  formSetUp("#origin-name");
+  formSetUp("#destination-name");
+  autocomplete("origin");
+  autocomplete("destination");
+
+  $(".edit_way").submit( formSubmit(event) );
 
   var origin;
   var map;

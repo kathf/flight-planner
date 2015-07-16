@@ -20,7 +20,7 @@ class WayCalculator
   def calculate_stopovers
     query = Query.create(origin: @origin, destination: @destination)
     airports_result = Route.find_stopovers(@origin, @destination)
-    if airports_result.any?
+    if airports_result.size > 1
       airports_result.each do |airport_id|
         query.airports << Airport.find(airport_id)
       end

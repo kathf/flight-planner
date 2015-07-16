@@ -11,6 +11,7 @@
  * file per style scope.
  *
  *= require bootstrap
+ *= require jquery-ui/autocomplete
  *= require_tree .
  *= require_self
  */
@@ -36,4 +37,8 @@ a.navbar-brand {
 .navbar {
   border-bottom: 1px solid grey;
   margin: 0;
+}
+
+li {
+  width: 100%;
 }

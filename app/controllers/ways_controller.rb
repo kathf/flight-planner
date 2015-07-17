@@ -32,8 +32,12 @@ class WaysController < ApplicationController
   private
 
   def closest_airport
-    @current_location = cookies[:lat_lng].split("|")
-    return Airport.closest(origin: @current_location)[0]
+    if cookies[:lat_lng]
+      @current_location = cookies[:lat_lng].split("|")
+      return Airport.closest(origin: @current_location)[0]
+    else
+      return Airport.find(15913)
+    end
   end
 
   def way_params

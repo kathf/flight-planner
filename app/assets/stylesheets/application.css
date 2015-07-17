@@ -26,12 +26,21 @@
  padding: 0 20px;
 }
 
+.navbar {
+  font-family: 'Permanent Marker', 'Sigmar One';
+}
+
 a.navbar-brand {
   padding: 0;
   font-size: 46px;
   line-height: 46px;
   font-weight: 800;
-  font-family: 'Permanent Marker', 'Sigmar One';
+}
+
+.subbrand {
+  color: #9d9d9d;
+  line-height: 36px;
+  padding: 5px 20px ;
 }
 
 .navbar {

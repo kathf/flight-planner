@@ -26,8 +26,15 @@ function initializeMap(origin) {
   var myStyles =
   [{"stylers":[{"visibility":"off"}]},{"featureType":"water","stylers":[{"visibility":"on"},{"hue":"#009999"}]},{"featureType":"landscape","stylers":[{"visibility":"on"},{"color":"#000000"}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#2f343b"},{"weight":1}]}]
 
+  var mapCentreLng;
+  if ( origin == null) {
+    mapCentreLng = 135;
+  } else {
+    mapCentreLng = origin.longitude;
+  };
+
   var myOptions = {
-    center: new google.maps.LatLng(39, origin.longitude),
+    center: new google.maps.LatLng(39, mapCentreLng),
     zoom: 2,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     minZoom: 1,
@@ -116,23 +123,22 @@ function markerContent(marker) {
 // create markers for selection of airports sent from ways controller
 function createStopoverMarkers(map, destinationsToMark, infowindow, origin, flightPath) {
   console.log("creating stopover markers");
-  for (var i = 0; i < destinationsToMark.length; i++) {
-      (function(airport) {
-          var latLng = new google.maps.LatLng(airport.latitude, airport.longitude);
-          var marker = new google.maps.Marker({
-              position: latLng,
-              map: map,
-              id: airport.id,
-              name: airport.name,
-              city: airport.city,
-              iata: airport.iata,
-              country: airport.country_name,
-              icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=glyphish_airplane|FFFFFF'
-          });
-          createMarkerListeners(marker, map, infowindow, origin, flightPath);
-      })(destinationsToMark[i]);
-  };
+  $.each(destinationsToMark, function() {
+    var latLng = new google.maps.LatLng(this.latitude, this.longitude);
+    var marker = new google.maps.Marker({
+        position: latLng,
+        map: map,
+        id: this.id,
+        name: this.name,
+        city: this.city,
+        iata: this.iata,
+        country: this.country_name,
+        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=glyphish_airplane|FFFFFF'
+    });
+    createMarkerListeners(marker, map, infowindow, origin, flightPath);
+  });
 }
+
 
 // add listener to marker - when clicked, open infowindow
 function createMarkerListeners(marker, map, infowindow, origin, flightPath) {
@@ -191,16 +197,19 @@ function autocomplete(input) {
 
 
 function formSubmit() {
-  alert("btn clicked");
   $("#origin-name").attr('disabled', 'true');
   $("#destination-name").attr('disabled', 'true');
   $('.edit_way').submit();
 }
 
 function revertForm() {
-  alert("form reverted");
   $("#origin-name").removeAttr('disabled');
   $("#destination-name").removeAttr('disabled');
+}
+
+function insertOriginInForm(origin) {
+  console.log("insert origin in form");
+  $("#origin-name").val(origin.name);
 }
 
 //////////// event listeners ///////////////
@@ -226,17 +235,22 @@ $(window).load(function () {
   var destinationsToMark;
 
   $.getJSON("/ways/set_location.json", function(data) {
-        origin = data.origin;
-        map = initializeMap(origin);
-        createOriginMarker(map, origin);
+    origin = data.origin;
+    map = initializeMap(origin);
 
-        $.getJSON("/ways.json", function(data) {
-            destinationsToMark = data.destinations;
-            var infowindow = createInfoWindow(map);
-            var flightPath = createFlightPath(map);
-            createStopoverMarkers(map, destinationsToMark, infowindow, origin, flightPath);
-          }
-        );
-      }
-  );
+    if (origin != null) {
+      createOriginMarker(map, origin);
+      insertOriginInForm(origin);
+
+      $.getJSON("/ways.json", function(data) {
+        if ( data != null ){
+          var infowindow = createInfoWindow(map);
+          var flightPath = createFlightPath(map);
+          destinationsToMark = data.destinations;
+          createStopoverMarkers(map, destinationsToMark, infowindow, origin, flightPath);
+        }
+      });
+
+    };
+  });
 });

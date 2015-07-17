@@ -2,7 +2,7 @@ class AirportsController < ApplicationController
   before_action :get_term
 
   def index
-    results = AirportQueryHelper.new(@term).name_query
+    results = Airport.search_all_columns(@term)
     respond_to do |format|
       format.html
       format.json { render json: results.to_json }

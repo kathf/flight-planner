@@ -1,3 +1,5 @@
+# not currently using this model - may delete after refactoring
+
 class Stopover < ActiveRecord::Base
   belongs_to :airport
 

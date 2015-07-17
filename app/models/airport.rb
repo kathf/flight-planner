@@ -12,8 +12,12 @@ class Airport < ActiveRecord::Base
                    :lat_column_name => :latitude,
                    :lng_column_name => :longitude
 
-  def to_label
-    "#{name} (#{iata})"
-  end
+  include PgSearch
+  pg_search_scope :search_all_columns,
+                  against: [ :name, :city, :country_name, :iata ],
+                  using: {
+                    tsearch: {prefix: true},
+                    trigram: {}
+                  }
 
 end

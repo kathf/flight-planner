@@ -1,5 +1,7 @@
 WayToGo
 
+Demo: https://powerful-atoll-2198.herokuapp.com/
+
 Flight-planning web app using Ruby on Rails, Bootstrap, jQuery and RSpec.
 
 - user can see their closest airport on the map

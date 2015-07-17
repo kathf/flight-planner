@@ -9,7 +9,6 @@ airports_array.each do |airport|
     icao: airport.icao,
     name: airport.name,
     city: airport.city,
-    city_code: airport.city_code,
     country_code: airport.country_code,
     country_name: airport.country_name,
     region_name: airport.region_name,

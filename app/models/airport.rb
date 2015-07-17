@@ -4,8 +4,6 @@ class Airport < ActiveRecord::Base
 
   has_and_belongs_to_many :queries, :join_table => "results", :foreign_key => "query_id"
 
-  validates :iata, :icao, :name, :city, :city_code, :country_code, :country_name, :region_name, :latitude, :longitude, presence: true
-
   acts_as_mappable :default_units => :kms,
                    :default_formula => :sphere,
                    :distance_field_name => :distance,

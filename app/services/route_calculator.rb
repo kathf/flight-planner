@@ -1,6 +1,4 @@
-require 'set'
-
-class WayCalculator
+class RouteCalculator
   def initialize(options = {})
     @origin = options[:orig]
     @destination = options[:dest]

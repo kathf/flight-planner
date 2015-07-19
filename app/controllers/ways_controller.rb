@@ -7,13 +7,12 @@ class WaysController < ApplicationController
   end
 
   def index
-    @way = Way.create!
-    if closest_airport.id?
-      @destinations = WayCalculator.new(orig: closest_airport).calculate_destinations
-      response = { destinations: @destinations }
-    end
+    @way = Way.create(airport01: closest_airport)
+    @inputs_setter = WayAirportCounter.new(@way.attributes).count_airports + 1 #sets the number of form inputs based on the airports selected already plus 1
+    @destinations = RouteCalculator.new(orig: closest_airport).calculate_destinations
+    response = { destinations: @destinations }
     respond_to do |format|
-      format.html { @way }
+      format.html
       format.json { render json: response }
     end
   end
@@ -21,7 +20,7 @@ class WaysController < ApplicationController
   # user inputs origin and destination, returns json of airport results
   def update
     if @way.update_attributes(way_params)
-      results = WayCalculator.new(orig: @way.origin, dest: @way.destination).calculate_stopovers
+      results = RouteCalculator.new(orig: @way.airport01, dest: @way.airport02).calculate_stopovers
       render json: results
     else
       flash[:notice] = 'Wrong way'
@@ -36,12 +35,23 @@ class WaysController < ApplicationController
       @current_location = cookies[:lat_lng].split("|")
       return Airport.closest(origin: @current_location)[0]
     else
-      return Airport.find(15913)
+      return Airport.find(rand(18925)+1)
     end
   end
 
   def way_params
-    params.require(:way).permit(:origin_id, :destination_id)
+    params.require(:way).permit(
+      :airport01_id,
+      :airport02_id,
+      :airport03_id,
+      :airport04_id,
+      :airport05_id,
+      :airport06_id,
+      :airport07_id,
+      :airport08_id,
+      :airport09_id,
+      :airport10_id
+      )
   end
 
   def set_way

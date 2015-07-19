@@ -1,6 +1,6 @@
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui
+//= require jquery-ui/autocomplete
 //= require bootstrap
 //= require turbolinks
 //= require 'airports.js'
@@ -148,8 +148,8 @@ function createMarkerListeners(marker, map, infowindow, origin, flightPath) {
     openInfowindow(map, marker, infowindow);
   });
   google.maps.event.addListener(marker, 'click', function() {
-    $("#destination-name").val(marker.name);
-    $("#destination-id").val(marker.id);
+    $("#airport02-name").val(marker.name);
+    $("#airport02-id").val(marker.id);
     // $(".edit_way").submit();
   });
 }
@@ -190,26 +190,26 @@ function autocomplete(input) {
     .data( "uiAutocomplete" )._renderItem = function( ul, item ) {
     return $( "<li></li>" )
         .data( "item.autocomplete", item )
-        .append( "<a>" + item.name + "</a>" )
+        .append( "<a>" + item.name + " (" + item.iata + "), " + item.city + " " + item.country_name + "</a>" )
         .appendTo( ul );
     };
 }
 
 
 function formSubmit() {
-  $("#origin-name").attr('disabled', 'true');
-  $("#destination-name").attr('disabled', 'true');
+  $("#airport01-name").attr('disabled', 'true');
+  $("#airport02-name").attr('disabled', 'true');
   $('.edit_way').submit();
 }
 
 function revertForm() {
-  $("#origin-name").removeAttr('disabled');
-  $("#destination-name").removeAttr('disabled');
+  $("#airport01-name").removeAttr('disabled');
+  $("#airport02-name").removeAttr('disabled');
 }
 
 function insertOriginInForm(origin) {
   console.log("insert origin in form");
-  $("#origin-name").val(origin.name);
+  $("#airport01-name").val(origin.name);
 }
 
 //////////// event listeners ///////////////
@@ -219,10 +219,10 @@ setLocation();
 $(window).load(function () {
   console.log("window load");
 
-  formSetUp("#origin-name");
-  formSetUp("#destination-name");
-  autocomplete("origin");
-  autocomplete("destination");
+  formSetUp("#airport01-name");
+  formSetUp("#airport02-name");
+  autocomplete("airport01");
+  autocomplete("airport02");
 
   $("#btn-submit").click( function(event) {
     event.preventDefault();

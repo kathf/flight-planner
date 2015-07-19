@@ -22,11 +22,15 @@
    padding: 0;
  }
 
+body {
+  overflow: hidden;
+}
+
 .navbar-container {
  padding: 0 20px;
 }
 
-.navbar {
+.navbar-header {
   font-family: 'Permanent Marker', 'Sigmar One';
 }
 

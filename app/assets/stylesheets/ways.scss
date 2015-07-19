@@ -53,3 +53,13 @@
     color: white;
   }
 }
+
+footer {
+  bottom: 0;
+  position: fixed;
+  padding: 10px;
+}
+
+.btn-clear, .btn-save {
+  background-color: #F1E4D5;
+}

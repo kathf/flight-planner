@@ -65,8 +65,16 @@ ActiveRecord::Schema.define(version: 20150717072032) do
   end
 
   create_table "ways", force: :cascade do |t|
-    t.integer  "destination_id"
-    t.integer  "origin_id"
+    t.integer  "airport01_id"
+    t.integer  "airport02_id"
+    t.integer  "airport03_id"
+    t.integer  "airport04_id"
+    t.integer  "airport05_id"
+    t.integer  "airport06_id"
+    t.integer  "airport07_id"
+    t.integer  "airport08_id"
+    t.integer  "airport09_id"
+    t.integer  "airport10_id"
     t.integer  "stopovers_array", default: [],              array: true
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false

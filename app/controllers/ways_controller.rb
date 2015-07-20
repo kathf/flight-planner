@@ -1,5 +1,5 @@
 class WaysController < ApplicationController
-  before_action :set_way, only: :update
+  before_action :set_way, only: [:update]
 
   #get user's location from cookie - this is called from javascript file on window load
   def set_location
@@ -7,21 +7,33 @@ class WaysController < ApplicationController
   end
 
   def index
-    @way = Way.create(airport01: closest_airport)
-    @inputs_setter = WayAirportCounter.new(@way.attributes).count_airports + 1 #sets the number of form inputs based on the airports selected already plus 1
-    @destinations = RouteCalculator.new(orig: closest_airport).calculate_destinations
-    response = { destinations: @destinations }
+    if params[:id]
+      @way = set_way
+    else
+      @way = create
+    end
+    @inputs_setter = WayAirportHelper.new(@way.attributes).airports_form_info_hash[:form_inputs] #sets the number of form inputs based on the airports selected already
+    airports_to_mark = direct_route_options(closest_airport)
     respond_to do |format|
       format.html
-      format.json { render json: response }
+      format.json { render json: { "airportsToMark": airports_to_mark } }
     end
+  end
+
+  def create
+    @way = Way.create(airport01: closest_airport)
+  end
+
+  def direct_route_options(origin)
+    direct_route_options = RouteCalculator.new(orig: origin).calculate_destinations
   end
 
   # user inputs origin and destination, returns json of airport results
   def update
     if @way.update_attributes(way_params)
-      results = RouteCalculator.new(orig: @way.airport01, dest: @way.airport02).calculate_stopovers
-      render json: results
+      WayAirportHelper.new(@way.attributes).next_stop_options_for_map
+      # results = RouteCalculator.new(orig: @way.airport01, dest: @way.airport02).calculate_stopovers
+      # redirect_to action: :index
     else
       flash[:notice] = 'Wrong way'
       redirect_to action: :index

@@ -121,9 +121,9 @@ function markerContent(marker) {
 }
 
 // create markers for selection of airports sent from ways controller
-function createStopoverMarkers(map, destinationsToMark, infowindow, origin, flightPath) {
+function createStopoverMarkers(map, airportsToMark, infowindow, origin, flightPath) {
   console.log("creating stopover markers");
-  $.each(destinationsToMark, function() {
+  $.each(airportsToMark, function() {
     var latLng = new google.maps.LatLng(this.latitude, this.longitude);
     var marker = new google.maps.Marker({
         position: latLng,
@@ -232,7 +232,7 @@ $(window).load(function () {
 
   var origin;
   var map;
-  var destinationsToMark;
+  var airportsToMark;
 
   $.getJSON("/ways/set_location.json", function(data) {
     origin = data.origin;
@@ -246,11 +246,10 @@ $(window).load(function () {
         if ( data != null ){
           var infowindow = createInfoWindow(map);
           var flightPath = createFlightPath(map);
-          destinationsToMark = data.destinations;
-          createStopoverMarkers(map, destinationsToMark, infowindow, origin, flightPath);
+          airportsToMark = data.airportsToMark;
+          createStopoverMarkers(map, airportsToMark, infowindow, origin, flightPath);
         }
       });
-
     };
   });
 });

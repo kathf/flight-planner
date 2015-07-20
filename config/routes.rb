@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   resources :ways do
     get 'set_location', on: :collection
+    get 'direct_route_options', on: :collection
   end
 
   # Example of regular route:

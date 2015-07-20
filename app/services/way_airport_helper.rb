@@ -9,32 +9,23 @@ class WayAirportHelper
     i = 1
     blank_inputs = []
     @attrs.each do |attr, val|
-      (blank_inputs << i) if (attr[0..6] == "airport") && (val.nil?)
+      (blank_inputs << { attr: attr, i: i} ) if (attr[0..6] == "airport") && (val.nil?)
       break if blank_inputs.size == 2
       i +=1
     end
     return blank_inputs
   end
 
+  #keep working on this
   def airports_form_info_hash
     blank_inputs = count_airports
-    if ( blank_inputs[1] - blank_inputs[0] == 1 )
-      airports_form_info_hash = { number_of_inputs: blank_inputs[1]}
+    if ( blank_inputs[1][:i] - blank_inputs[0][:i] == 1 )
+      origin = "airport#{sprintf("%02d", (blank_inputs[1][:i] - 1))}_id"
+      RouteCalculator.new(orig: origin).calculate_destinations
     else
-      airports_form_info_hash = { number_of_inputs: blank_inputs[0], blank: blank_inputs[0] }
+      origin = "airport#{sprintf("%02d", (blank_inputs[0][:i] - 1) )}_id"
+      destination = "airport#{sprintf("%02d", (blank_inputs[0][:i] + 1) )}_id"
+      RouteCalculator.new(orig: origin, dest: destination).calculate_stopovers
     end
-    return airports_form_info_hash
   end
-
-
-  def next_stop_options_for_map
-    hash = airports_form_info_hash
-    if hash[:blank].nil?
-      airport_attribute_no = hash[:number_of_inputs] #convert to 2 digit and concat into attribute name
-    else
-      airport_attribute_no = hash[:blank]
-    end
-    airport_attribute = "airport#{sprintf("%02d", airport_attribute_no)}_id"
-  end
-
 end

@@ -32,6 +32,7 @@ class WaysController < ApplicationController
   def update
     if @way.update_attributes(way_params)
       WayAirportHelper.new(@way.attributes).next_stop_options_for_map
+
       # results = RouteCalculator.new(orig: @way.airport01, dest: @way.airport02).calculate_stopovers
       # redirect_to action: :index
     else

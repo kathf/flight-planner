@@ -12,8 +12,9 @@ class WaysController < ApplicationController
     else
       @way = create
     end
-    @inputs_setter = WayAirportHelper.new(@way.attributes).airports_form_info_hash[:form_inputs] #sets the number of form inputs based on the airports selected already
-    airports_to_mark = direct_route_options(closest_airport)
+    way_airport_helper = WayAirportHelper.new(@way)
+    @inputs_setter = way_airport_helper.count_airports #sets the number of form inputs based on the airports selected already
+    airports_to_mark = way_airport_helper.airports_form_info_hash
     respond_to do |format|
       format.html
       format.json { render json: { "airportsToMark": airports_to_mark } }
@@ -24,17 +25,12 @@ class WaysController < ApplicationController
     @way = Way.create(airport01: closest_airport)
   end
 
-  def direct_route_options(origin)
-    direct_route_options = RouteCalculator.new(orig: origin).calculate_destinations
-  end
-
   # user inputs origin and destination, returns json of airport results
+  #TODO: ajax request in js to update index view
   def update
     if @way.update_attributes(way_params)
       WayAirportHelper.new(@way.attributes).next_stop_options_for_map
-
-      # results = RouteCalculator.new(orig: @way.airport01, dest: @way.airport02).calculate_stopovers
-      # redirect_to action: :index
+      redirect_to action: :index
     else
       flash[:notice] = 'Wrong way'
       redirect_to action: :index

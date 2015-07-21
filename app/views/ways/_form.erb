@@ -1,10 +1,17 @@
-<form class="edit_way" action="/ways/<%=@way.id%>" data-remote="true" method="post">
-
+<form class="edit_way" action="/ways/<%=@way.id%>" data-remote="true" method="put">
   <% 1.upto(@inputs_setter).each do |i| %>
     <% airport = "airport#{sprintf("%02d", i)}"  %>
     <input id="<%=airport%>-id" type="hidden" name="way[<%= "#{airport}_id" %>]" />
     <input class="form-control" id="<%= "#{airport}-name" %>" type="text" name="way[<%=airport%>][name]" />
+
+    <% if i != @inputs_setter %>
+      <%= link_to "/", class: "btn-add" do %>
+        <span class="btn-add glyphicon glyphicon-plus"></span>
+        <span class="btn-add glyphicon glyphicon-send"></span>
+      <% end  %>
+    <% end %>
+
   <% end %>
-  
+
   <input type="submit" name="commit" value="Find your way" class="btn btn-default" id="btn-submit" />
 </form>

@@ -29,12 +29,12 @@ class WaysController < ApplicationController
   #TODO: ajax request in js to update index view
   def update
     if @way.update_attributes(way_params)
-      WayAirportHelper.new(@way.attributes).next_stop_options_for_map
-      redirect_to action: :index
+      flash[:notice] = 'Winning!'
     else
-      flash[:notice] = 'Wrong way'
-      redirect_to action: :index
+      flash[:notice] = 'Way not updated'
     end
+    redirect_to action: :index, status: 303, id: @way.id
+    # { 'params[id]' => @way.id, method: 'GET'}
   end
 
   private

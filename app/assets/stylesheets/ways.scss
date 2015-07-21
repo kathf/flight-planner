@@ -38,7 +38,6 @@
   }
 }
 
-
 .instructions {
   color: #009999;
 }
@@ -62,4 +61,11 @@ footer {
 
 .btn-clear, .btn-save {
   background-color: #F1E4D5;
+}
+
+a.btn-add {
+  line-height: 20px;
+  display: inline-block;
+  margin: 0 121px;
+  color: #009999;
 }

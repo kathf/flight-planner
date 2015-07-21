@@ -12,8 +12,8 @@
  *
  *= require bootstrap
  *= require jquery-ui/autocomplete
- *= require_tree .
  *= require_self
+ *= require_tree .
  */
 
  html, body {
@@ -54,4 +54,8 @@ a.navbar-brand {
 
 li {
   width: 100%;
+}
+
+form {
+  padding: 0;
 }

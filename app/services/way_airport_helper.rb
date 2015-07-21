@@ -6,7 +6,7 @@ class WayAirportHelper
     @attrs = way.attributes
   end
 
-  #returns a hash - first element is the number of input fields required (based on the saved atributes of @way in the way controller) - second element is the attribute position of any blank fields. This info is used to construct the form.
+  #returns an integer for how many input fields are required for the form (based on how many airport attributes are already saved and if/where there are blank attributes)
   def count_airports
     i = 0
     @blank_inputs = []
@@ -23,13 +23,13 @@ class WayAirportHelper
   end
 
   def airports_form_info_hash
-    airport_attribute_stg = "airport#{sprintf("%02d", (@blank_inputs[0][:i]))}"
-    origin = @way.send(airport_attribute_stg)
+    origin_airport_attribute_string = "airport#{sprintf("%02d", (@blank_inputs[0][:i] - 1))}"
+    origin = @way.send(origin_airport_attribute_string)
     if @consecutive_blanks # if first 2 blank attributes are consecutive then calculate destination options from last airport
       RouteCalculator.new(orig: origin).calculate_destinations
     else #if not consecutive then find stopover airports to fill in blank leg
-      airport_attribute_stg = "airport#{sprintf("%02d", (@blank_inputs[0][:i] + 2))}"
-      destination = @way.send(airport_attribute_stg)
+      destination_airport_attribute_string = "airport#{sprintf("%02d", (@blank_inputs[0][:i] + 1))}"
+      destination = @way.send(destination_airport_attribute_string)
       RouteCalculator.new(orig: origin, dest: destination).calculate_stopovers
     end
   end

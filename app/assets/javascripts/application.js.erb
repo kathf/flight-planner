@@ -70,10 +70,11 @@ function setCurrentLocationAsCentre(map, origin) {
 }
 
 // ajax request to get all airports to mark, including origin and destination
-function getDataFromWaysIndex(markers) {
-  $.getJSON("/ways.json", function(data) {
+function getDataFromWaysController(url, markers) {
+  $.getJSON(url, function(data) {
     if ( data != null ){
       console.log("ajax request from index action");
+      console.log(data);
       airportsToMark = data.airportsToMark;
 
       origin = data.origin;
@@ -297,7 +298,7 @@ $(window).load(function () {
   markers.push(destinationMarker);
 
   setClosestAirportToUser();
-  getDataFromWaysIndex(markers);
+  getDataFromWaysController("/ways.json", markers)
 
   formSetUp("#airport01-name");
   formSetUp("#airport02-name");
@@ -309,6 +310,6 @@ $(window).load(function () {
     formSubmit();
     revertForm();
     deleteMarkers(markers);
-    getDataFromWaysIndex(markers);
+    getDataFromWaysController("/ways.json", markers)
   });
 });

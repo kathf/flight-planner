@@ -23,6 +23,7 @@ class WayAirportHelper
   end
 
   def airports_form_info_hash
+    count_airports
     origin_airport = origin
     if @consecutive_blanks # if first 2 blank attributes are consecutive then calculate destination options from last airport
       RouteCalculator.new(orig: origin_airport).calculate_destinations

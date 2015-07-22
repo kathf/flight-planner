@@ -2,7 +2,7 @@
   <% 1.upto(@inputs_setter).each do |i| %>
     <% airport = "airport#{sprintf("%02d", i)}"  %>
     <input id="<%=airport%>-id" type="hidden" name="way[<%= "#{airport}_id" %>]" />
-    <input class="form-control" id="<%= "#{airport}-name" %>" type="text" name="way[<%=airport%>][name]" />
+    <input class="form-control" id="<%= "#{airport}-name" %>" type="text" name="way[<%=airport%>][name]" value="<%= @way.send(airport).name if @way.send(airport) %>" />
 
     <% if i != @inputs_setter %>
       <%= link_to "/", class: "btn-add" do %>

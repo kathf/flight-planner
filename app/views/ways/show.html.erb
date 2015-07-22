@@ -1,0 +1,29 @@
+<div class="container-fluid content full-height">
+  <div class="row map-row full-height">
+
+    <div class="col-sm-3 form-and-text-column full-height">
+      <div>
+        <%= render partial: "form", layout: false %>
+      </div>
+      <div class="instructions">
+          <p class="text-centre"> Select from direct-route airports on the map </br> or search for an airport, city or country above to find your WAY TO GO </p>
+      </div>
+
+      <footer class="footer centre-block">
+        <%= button_tag "Clear", class: "btn btn-clear" %>
+        <%= button_tag "Save & Email", class: "btn btn-save" %>
+      </footer>
+
+    </div> <!-- form-and-text-column -->
+
+    <div class="col-sm-9 full-height">
+      <div id="map-canvas"></div>
+    </div>
+
+  </div> <!-- row -->
+  <div class="row">
+
+  </div>
+
+</div> <!-- container -->
+<div class="black full-height"></div>

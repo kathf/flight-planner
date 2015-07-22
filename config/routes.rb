@@ -8,8 +8,7 @@ Rails.application.routes.draw do
   resources :airports
 
   resources :ways do
-    get 'set_location', on: :collection
-    get 'direct_route_options', on: :collection
+    get 'set_closest_airport_to_user', on: :collection
   end
 
   # Example of regular route:

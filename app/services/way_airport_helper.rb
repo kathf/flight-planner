@@ -23,14 +23,22 @@ class WayAirportHelper
   end
 
   def airports_form_info_hash
+    origin_airport = origin
+    if @consecutive_blanks # if first 2 blank attributes are consecutive then calculate destination options from last airport
+      RouteCalculator.new(orig: origin_airport).calculate_destinations
+    else #if not consecutive then find stopover airports to fill in blank leg
+      destination_airport = destination
+      RouteCalculator.new(orig: origin, dest: destination_airport).calculate_stopovers
+    end
+  end
+
+  def origin
     origin_airport_attribute_string = "airport#{sprintf("%02d", (@blank_inputs[0][:i] - 1))}"
     origin = @way.send(origin_airport_attribute_string)
-    if @consecutive_blanks # if first 2 blank attributes are consecutive then calculate destination options from last airport
-      RouteCalculator.new(orig: origin).calculate_destinations
-    else #if not consecutive then find stopover airports to fill in blank leg
-      destination_airport_attribute_string = "airport#{sprintf("%02d", (@blank_inputs[0][:i] + 1))}"
-      destination = @way.send(destination_airport_attribute_string)
-      RouteCalculator.new(orig: origin, dest: destination).calculate_stopovers
-    end
+  end
+
+  def destination
+    destination_airport_attribute_string = "airport#{sprintf("%02d", (@blank_inputs[0][:i] + 1))}"
+    destination = @way.send(destination_airport_attribute_string)
   end
 end

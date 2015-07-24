@@ -317,6 +317,7 @@ $(window).load(function () {
     revertForm();
     deleteMarkers(markers);
     var url = wayPath + ".json";
-    getDataFromWaysController(url, markers)
+    getDataFromWaysController(url, markers);
+    window.location.href = "http://localhost:3000/" + wayPath;
   });
 });

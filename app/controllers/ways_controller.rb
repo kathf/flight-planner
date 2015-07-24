@@ -22,7 +22,9 @@ class WaysController < ApplicationController
   end
 
   def update
-    redirect_to action: :show, id: @way.id, status: 303, format: "html"
+    @way.update_attributes(way_params)
+    # redirect_to way_path, status: 303, format: 'html'
+    render nothing: true
   end
 
   def show

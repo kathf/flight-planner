@@ -10,7 +10,7 @@
 
 // send user's location to controller and calculate closest airport and set as @ways.origin
 var detectUserLocation = function () {
-  console.log("location set");
+  ("location set");
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
       var cookie_val = position.coords.latitude + "|" + position.coords.longitude;
@@ -21,7 +21,7 @@ var detectUserLocation = function () {
 
 // initialize google map and call function to create marker for origin airport (closest to user's location)
 function initializeMap() {
-  console.log("initializing map");
+  ("initializing map");
 
   var myStyles =
   [{"stylers":[{"visibility":"off"}]},{"featureType":"water","stylers":[{"visibility":"on"},{"hue":"#009999"}]},{"featureType":"landscape","stylers":[{"visibility":"on"},{"color":"#000000"}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#2f343b"},{"weight":1}]}]
@@ -52,7 +52,7 @@ function initializeMap() {
 // ajax request to get closest airport to user's current location and (i) set as origin marker, (ii) autofill into form and (iii) centre map around origin's longitude
 function setClosestAirportToUser() {
   $.getJSON("/ways/set_closest_airport_to_user.json", function(data) {
-    console.log("set closest airport to user as origin");
+    ("set closest airport to user as origin");
     origin = data.origin;
     if (origin != null) {
       setCurrentLocationAsCentre(map, origin);
@@ -64,7 +64,7 @@ function setClosestAirportToUser() {
 
 // centre map around origin's longitude (from ajax request)
 function setCurrentLocationAsCentre(map, origin) {
-  console.log("setting current location as map centre");
+  ("setting current location as map centre");
   var latLng = new google.maps.LatLng(39, origin.longitude);
   map.setCenter(latLng);
 }
@@ -74,8 +74,9 @@ function getDataFromWaysController(url, markers) {
   $.getJSON(url, function(data) {
     if ( data != null ){
       console.log("ajax request from index action");
-      console.log(data);
       airportsToMark = data.airportsToMark;
+
+      var wayID = data.wayID;
 
       origin = data.origin;
       if (origin != null) {
@@ -93,7 +94,6 @@ function getDataFromWaysController(url, markers) {
 }
 
 function deleteMarkers(markers) {
-  console.log(markers);
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
   }
@@ -183,7 +183,6 @@ function markerContent(marker) {
 // create markers for selection of airports sent from ways controller
 function createStopoverMarkers(markers) {
   console.log("creating stopover markers");
-  console.log(airportsToMark);
   $.each(airportsToMark, function() {
     var latLng = new google.maps.LatLng(this.latitude, this.longitude);
     var marker = new google.maps.Marker({
@@ -276,6 +275,11 @@ function insertOriginInForm(origin) {
   $("#airport01-id").val(origin.id);
 }
 
+function getWayPath() {
+  wayFormAction = $('.edit_way').attr("action");
+  return wayFormAction;
+}
+
 ////////////////////////// event listeners
 
 detectUserLocation();
@@ -286,6 +290,7 @@ $(window).load(function () {
   var origin;
   var destination;
   var airportsToMark;
+  var wayPath;
   var markers = [];
 
   var map = initializeMap();
@@ -298,18 +303,20 @@ $(window).load(function () {
   markers.push(destinationMarker);
 
   setClosestAirportToUser();
-  getDataFromWaysController("/ways.json", markers)
+  getDataFromWaysController("/ways.json", markers);
 
   formSetUp("#airport01-name");
   formSetUp("#airport02-name");
   autocomplete("airport01");
   autocomplete("airport02");
+  wayPath = getWayPath();
 
   $("#btn-submit").click( function(event) {
     event.preventDefault();
     formSubmit();
     revertForm();
     deleteMarkers(markers);
-    getDataFromWaysController("/ways.json", markers)
+    var url = wayPath + ".json";
+    getDataFromWaysController(url, markers)
   });
 });

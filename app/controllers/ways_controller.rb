@@ -10,7 +10,7 @@ class WaysController < ApplicationController
     @way = create
     way_airport_helper = WayAirportHelper.new(@way)
     @inputs_setter = 2 #number of input fields required
-    response = json_constructor(way_airport_helper)
+    response = json_constructor(way_airport_helper, @way.id)
     respond_to do |format|
       format.html
       format.json { render json: response }
@@ -22,18 +22,13 @@ class WaysController < ApplicationController
   end
 
   def update
-    if @way.update_attributes(way_params)
-      flash[:notice] = 'Winning!'
-    else
-      flash[:notice] = 'Way not updated'
-    end
-    redirect_to way_path(@way), status: 303, format: "html"
+    redirect_to action: :show, id: @way.id, status: 303, format: "html"
   end
 
   def show
     way_airport_helper = WayAirportHelper.new(@way)
     @inputs_setter = way_airport_helper.count_airports #number of input fields required
-    response = json_constructor(way_airport_helper)
+    response = json_constructor(way_airport_helper, @way.id)
     respond_to do |format|
       format.html
       format.json { render json: response }
@@ -72,11 +67,11 @@ class WaysController < ApplicationController
     @way = Way.find(params[:id])
   end
 
-  def json_constructor(way_airport_helper)
+  def json_constructor(way_airport_helper, id)
     airports_to_mark = way_airport_helper.airports_form_info_hash
     origin = way_airport_helper.origin  #something here that returns the number of inputs, the origin and/or destination for the search query and an object of all airports to mark
     destination = way_airport_helper.destination
-    response = { airportsToMark: airports_to_mark, origin: origin, destination: destination }
+    response = { airportsToMark: airports_to_mark, origin: origin, destination: destination, wayID: id }
   end
 
 end

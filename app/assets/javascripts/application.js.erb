@@ -50,17 +50,18 @@ function initializeMap() {
 }
 
 // ajax request to get closest airport to user's current location and (i) set as origin marker, (ii) autofill into form and (iii) centre map around origin's longitude
-function setClosestAirportToUser() {
-  $.getJSON("/ways/set_closest_airport_to_user.json", function(data) {
-    ("set closest airport to user as origin");
-    origin = data.origin;
-    if (origin != null) {
-      setCurrentLocationAsCentre(map, origin);
-      setOriginMarker(map, origin);
-      insertOriginInForm(origin);
-    };
-  });
-}
+// function setClosestAirportToUser() {
+//   $.getJSON("/ways/set_closest_airport_to_user.json", function(data) {
+//     ("set closest airport to user as origin");
+//     origin = data.origin;
+//     if (origin != null) {
+//       setCurrentLocationAsCentre(map, origin);
+//       createWayMarker(map, origin)
+//       insertOriginInForm(origin);
+//     };
+//   });
+// }
+
 
 // centre map around origin's longitude (from ajax request)
 function setCurrentLocationAsCentre(map, origin) {
@@ -70,25 +71,21 @@ function setCurrentLocationAsCentre(map, origin) {
 }
 
 // ajax request to get all airports to mark, including origin and destination
-function getDataFromWaysController(url, markers) {
+function getDataFromWaysController(url, optionMarkers, wayMarkers) {
   $.getJSON(url, function(data) {
     if ( data != null ){
       console.log("ajax request from index action");
       airportsToMark = data.airportsToMark;
 
-      var wayID = data.wayID;
+      var wayAttributes = data.wayAttributes
 
-      origin = data.origin;
-      if (origin != null) {
-        setOriginMarker(map, origin);
-      };
+      $.each(wayAttributes, function(attr, value) {
+        createWayMarker(map, value, wayMarkers);
+        setCurrentLocationAsCentre(map, value);
+      });
 
-      createStopoverMarkers(markers);
+      createStopoverMarkers(optionMarkers);
 
-      destination = data.destination;
-      if (destination != null) {
-        setDestinationMarker(map, destination);
-      };
     }
   });
 }
@@ -100,36 +97,16 @@ function deleteMarkers(markers) {
   markers = [];
 }
 
-// create generic marker for origin airport
-function createOriginMarker(map) {
+// create marker for each airport saved as on the user's WAY
+function createWayMarker(map, way, wayMarkers) {
   console.log("creating generic origin marker");
-  originMarker = new google.maps.Marker({
+  var latLng = new google.maps.LatLng(way.latitude, way.longitude);
+  marker = new google.maps.Marker({
+    position: latLng,
     map: map,
     icon: 'http://maps.google.com/mapfiles/kml/pal3/icon53.png'
   });
-  return originMarker;
-}
-
-// create generic marker for destination airport
-function createDestinationMarker(map) {
-  console.log("creating generic destination marker");
-  destinationMarker = new google.maps.Marker({
-    map: map,
-    icon: 'http://maps.google.com/mapfiles/kml/pal3/icon53.png'
-  });
-  return destinationMarker;
-}
-
-// provide coorindates of origin airport for marker
-function setOriginMarker(map, origin) {
-  var latLng = new google.maps.LatLng(origin.latitude, origin.longitude);
-  originMarker.setPosition(latLng);
-}
-
-// provide coorindates of destination airport for marker
-function setDestinationMarker(map, destination) {
-  var latLng = new google.maps.LatLng(destination.latitude, destination.longitude);
-  destinationMarker.setPosition(latLng);
+  wayMarkers.push(marker);
 }
 
 // create one generic infowindow to be updated by event listener on each airport marker and set event listener to close it whenever user clicks elsewhere on the map
@@ -181,7 +158,7 @@ function markerContent(marker) {
 }
 
 // create markers for selection of airports sent from ways controller
-function createStopoverMarkers(markers) {
+function createStopoverMarkers(optionMarkers) {
   console.log("creating stopover markers");
   $.each(airportsToMark, function() {
     var latLng = new google.maps.LatLng(this.latitude, this.longitude);
@@ -195,7 +172,7 @@ function createStopoverMarkers(markers) {
         country: this.country_name,
         icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=glyphish_airplane|FFFFFF'
     });
-    markers.push(marker);
+    optionMarkers.push(marker);
     createMarkerListeners(marker, map, infowindow, flightPath);
   });
 }
@@ -288,22 +265,17 @@ $(window).load(function () {
   console.log("window load");
 
   var origin;
-  var destination;
   var airportsToMark;
   var wayPath;
-  var markers = [];
+  var optionMarkers = [];
+  var wayMarkers = [];
 
   var map = initializeMap();
   var infowindow = createInfoWindow(map);
   var flightPath = createFlightPath(map);
-  var originMarker = createOriginMarker(map);
-  var destinationMarker = createDestinationMarker(map);
 
-  markers.push(originMarker);
-  markers.push(destinationMarker);
-
-  setClosestAirportToUser();
-  getDataFromWaysController("/ways.json", markers);
+  // setClosestAirportToUser();
+  getDataFromWaysController("/ways.json", optionMarkers, wayMarkers);
 
   formSetUp("#airport01-name");
   formSetUp("#airport02-name");
@@ -315,9 +287,10 @@ $(window).load(function () {
     event.preventDefault();
     formSubmit();
     revertForm();
-    deleteMarkers(markers);
+    deleteMarkers(optionMarkers);
+    deleteMarkers(wayMarkers);
     var url = wayPath + ".json";
-    getDataFromWaysController(url, markers);
+    getDataFromWaysController(url, optionMarkers, wayMarkers);
     window.location.href = "http://localhost:3000/" + wayPath;
   });
 });

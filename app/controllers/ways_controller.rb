@@ -10,7 +10,7 @@ class WaysController < ApplicationController
     @way = create
     way_airport_helper = WayAirportHelper.new(@way)
     @inputs_setter = 2 #number of input fields required
-    response = json_constructor(way_airport_helper, @way.id)
+    response = json_constructor(way_airport_helper)
     respond_to do |format|
       format.html
       format.json { render json: response }
@@ -30,7 +30,7 @@ class WaysController < ApplicationController
   def show
     way_airport_helper = WayAirportHelper.new(@way)
     @inputs_setter = way_airport_helper.count_airports #number of input fields required
-    response = json_constructor(way_airport_helper, @way.id)
+    response = json_constructor(way_airport_helper)
     respond_to do |format|
       format.html
       format.json { render json: response }
@@ -69,11 +69,18 @@ class WaysController < ApplicationController
     @way = Way.find(params[:id])
   end
 
-  def json_constructor(way_airport_helper, id)
+  def json_constructor(way_airport_helper)
     airports_to_mark = way_airport_helper.airports_form_info_hash
-    origin = way_airport_helper.origin  #something here that returns the number of inputs, the origin and/or destination for the search query and an object of all airports to mark
-    destination = way_airport_helper.destination
-    response = { airportsToMark: airports_to_mark, origin: origin, destination: destination, wayID: id }
+    way_attributes = {}
+    @way.attributes.each do |key, val|
+      if key[0..6] == "airport" && val
+        way_attributes[key[0..8]] = Airport.find(val).attributes
+      end
+    end
+    # origin = way_airport_helper.origin  #something here that returns the number of inputs, the origin and/or destination for the search query and an object of all airports to mark
+    # destination = way_airport_helper.destination
+    response = { airportsToMark: airports_to_mark, wayID: @way.id, wayAttributes: way_attributes }
+    # origin: origin, destination: destination,
   end
 
 end

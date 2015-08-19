@@ -18,7 +18,7 @@ class WayAirportHelper
       i +=1
     end
     @consecutive_blanks = true if ( @blank_inputs[1][:i] - @blank_inputs[0][:i] == 1 )
-    return @blank_inputs[0][:i] if consecutive_blanks
+    return @blank_inputs[0][:i] if @consecutive_blanks
     return @blank_inputs[1][:i]
   end
 

@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'world_airports'
-gem "flightstats-flex", "~> 0.3.0"
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-bootstrap'

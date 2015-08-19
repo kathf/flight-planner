@@ -1,6 +1,11 @@
-WayToGo
+Demo removed from heroku... too many data rows :(
 
-Demo: https://powerful-atoll-2198.herokuapp.com/
+Check back in soon once I've worked out Amazon's RDS!
+
+
+------------------------------------------
+
+WayToGo
 
 Flight-planning web app using Ruby on Rails, Bootstrap, jQuery and RSpec.
 
@@ -11,6 +16,3 @@ Flight-planning web app using Ruby on Rails, Bootstrap, jQuery and RSpec.
 - user can search for an airport name/code, city or country and select one in order to find possible routes to/from that airport
 - user can view possible routes to get between the selected airport and select one
 - user can add another stop and repeat the search / selection process
-
-
-(First attempt of app here: https://github.com/kathf/waytogo-first-attempt)

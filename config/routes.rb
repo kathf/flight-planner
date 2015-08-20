@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'ways#index'
 
-  resources :airports
+  get 'airports/search' => 'airports#search', as: :search
 
   resources :ways do
     get 'set_closest_airport_to_user', on: :collection

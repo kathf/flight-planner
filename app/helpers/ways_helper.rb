@@ -1,9 +1,12 @@
 module WaysHelper
 
-  # not currently using this
-  # def airport_label
-  #   a = Airport.find(id)
-  #   return "#{a.name} (#{a.iata})\n#{a.city}, #{a.country_name}"
-  # end
+  # if the attribute number (i) is less than the number of airports already selected by the user return "text", otherwise "hidden"
+  def hide_some_inputs(i, way_trimmed)
+    return "hidden" if i > way_trimmed.size + 1
+  end
+
+  def hide_last_btn(i, way_trimmed)
+    return "hidden" if i >= way_trimmed.size + 1
+  end
 
 end

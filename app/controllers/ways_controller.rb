@@ -1,19 +1,13 @@
 class WaysController < ApplicationController
   before_action :set_way, only: [:update, :show]
 
-  # Called from javascript file on window load
-  def set_closest_airport_to_user
-    render json: {origin: closest_airport}
-  end
-
   def index
-    @way = create
-    way_airport_helper = WayAirportHelper.new(@way)
-    @inputs_setter = 2 #number of input fields required
-    response = json_constructor(way_airport_helper)
+    create
+    @way_airport_helper = WayService.new(@way)
+    @way_trimmed = attribute_trimmer
     respond_to do |format|
       format.html
-      format.json { render json: response }
+      format.json { render json: json_constructor }
     end
   end
 
@@ -28,7 +22,7 @@ class WaysController < ApplicationController
   end
 
   def show
-    way_airport_helper = WayAirportHelper.new(@way)
+    way_airport_helper = WayService.new(@way)
     @inputs_setter = way_airport_helper.count_airports #number of input fields required
     response = json_constructor(way_airport_helper)
     respond_to do |format|
@@ -37,6 +31,10 @@ class WaysController < ApplicationController
     end
   end
 
+  # Called from javascript file on window load
+  def set_closest_airport_to_user
+    render json: {origin: closest_airport}
+  end
 
   private
 
@@ -69,18 +67,20 @@ class WaysController < ApplicationController
     @way = Way.find(params[:id])
   end
 
-  def json_constructor(way_airport_helper)
-    airports_to_mark = way_airport_helper.airports_form_info_hash
-    way_attributes = {}
-    @way.attributes.each do |key, val|
-      if key[0..6] == "airport" && val
-        way_attributes[key[0..8]] = Airport.find(val).attributes
-      end
-    end
-    # origin = way_airport_helper.origin  #something here that returns the number of inputs, the origin and/or destination for the search query and an object of all airports to mark
-    # destination = way_airport_helper.destination
-    response = { airportsToMark: airports_to_mark, wayID: @way.id, wayAttributes: way_attributes }
-    # origin: origin, destination: destination,
+  # remove attributes of @way whose value is blank
+  def attribute_trimmer
+    way_trimmed = @way.attributes
+    way_trimmed.delete_if { |k,v| !v || k == "id"}
+    return way_trimmed
+  end
+
+  def json_constructor
+    response = {
+      optionAirports: @way_airport_helper.option_airports,
+      wayAttributes: @way_airport_helper.way_airports,
+      origin_attribute: @way_airport_helper.origin_attribute,
+      destination_attribute: @way_airport_helper.destination_attribute
+    }
   end
 
 end

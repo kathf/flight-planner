@@ -11,8 +11,6 @@ class CreateWays < ActiveRecord::Migration
       t.integer :airport08_id, as: :airport_id
       t.integer :airport09_id, as: :airport_id
       t.integer :airport10_id, as: :airport_id
-      t.integer :stopovers_array, array: true, default: []
-      t.timestamps null: false
     end
   end
 end

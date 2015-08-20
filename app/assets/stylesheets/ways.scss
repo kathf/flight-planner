@@ -63,9 +63,15 @@ footer {
   background-color: #F1E4D5;
 }
 
-a.btn-add {
-  line-height: 20px;
-  display: inline-block;
-  margin: 0 121px;
-  color: #009999;
+.width-90-pc {
+  width: 90%;
+  display: inline;
+}
+
+.btn-close {
+  a {
+    font-size: 20px;
+    color: #009999;
+    background-color: black;
+  }
 }

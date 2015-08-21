@@ -1,12 +1,13 @@
 class WayService
-  attr_accessor :blank_input, :consecutive_blanks, :origin_attribute, :destination_attribute
+  # attr_accessor :origin_attribute, :destination_attribute, :attrs, :counter
 
   def initialize(way)
     @way = way
     @attrs = attributes_without_id
+    @counter = counter
+    @origin_attribute = origin_attribute
+    @destination_attribute = destination_attribute
   end
-
-
 
   def attributes_without_id
     res = @way.attributes
@@ -14,14 +15,20 @@ class WayService
     return res
   end
 
-  def non_blank_attributes
-    counter = 0
+  def counter
+    @counter = 0
     @attrs.each do |attr, val|
-      counter += 1 if !val.nil?
+      @counter += 1 if !val.nil?
     end
-    @origin_attribute = "airport#{sprintf( "%02d", counter )}"
-    @destination_attribute = "airport#{sprintf( "%02d", counter + 1 )}"
-    return counter
+    return @counter
+  end
+
+  def origin_attribute
+    @origin_attribute = "airport#{sprintf( "%02d", @counter )}"
+  end
+
+  def destination_attribute
+    @destination_attribute = "airport#{sprintf( "%02d", @counter + 1 )}"
   end
 
   # returns all airports that can be reached by direct flight from the supplied origin
@@ -29,14 +36,16 @@ class WayService
     RouteCalculator.new(orig: origin).calculate_destinations
   end
 
-
-### some issue here to sort out !!!!!!
   def way_airports
     hash = {}
     @attrs.each_pair do |attr, val|
-      hash[:attr] = Airport.find(val).to_json
+      hash[:attr] = Airport.find(val).to_json if val
     end
     return hash
+  end
+
+  def origin
+    origin = @way.send(@origin_attribute)
   end
 
   #returns an integer for how many input fields are required for the form (based on how many airport attributes are already saved and if/where there are blank attributes)
@@ -66,10 +75,6 @@ class WayService
   #   end
   # end
   #
-  def origin
-    # origin_airport = "airport#{sprintf("%02d", non_blank_attributes)}"
-    origin = @way.send(@origin_attribute)
-  end
   #
   # def destination
   #   destination_airport_attribute_string = "airport#{sprintf("%02d", (@blank_inputs[0][:i] + 1))}"

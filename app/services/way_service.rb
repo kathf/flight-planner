@@ -39,7 +39,8 @@ class WayService
   def way_airports
     hash = {}
     @attrs.each_pair do |attr, val|
-      hash[:attr] = Airport.find(val).to_json if val
+      # hash[attr[0..8]] = Airport.find(val).to_json if val
+      hash[attr[0..8]] = Airport.find(val) if val
     end
     return hash
   end

@@ -11,37 +11,58 @@ detectUserLocation();
 $(window).load(function () {
   console.log("window load");
 
-  var map,
-      mapAddOns,
-      origin_attribute,
-      destination_attribute,
+  var destination_attribute,
       optionAirports,
       wayAirports,
-      wayAirportMarkers = []
-  ;
+      wayAirportMarkers = [],
+      optionAirportMarkers= [];
 
-  map = initializeMap();
-  mapAddOns = {
+  var origin = {
+    attribute: "",
+    airport: null
+  };
+
+  var map = initializeMap();
+  var mapAddOns = {
     infowindow: createInfoWindow(map),
     flightPath: createFlightPath(map),
-  }
+  };
 
-  getDataFromWaysController("/ways.json", optionAirports, wayAirports);
+  var icon = {
+    optionIcon: 'http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png',
+    wayIcon: 'http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png',
+  };
 
-  formSetUp("#airport01-name");
-  formSetUp("#airport02-name");
-  autocomplete("airport01");
-  autocomplete("airport02");
-  wayPath = getWayPath();
+  // ajax request to get all airports to mark, including origin and destination
+  var request = $.getJSON( "/ways.json");
 
-  $("#btn-submit").click( function(event) {
-    event.preventDefault();
-    formSubmit();
-    revertForm();
-    deleteMarkers(optionAirports);
-    deleteMarkers(wayAirports);
-    var url = wayPath + ".json";
-    getDataFromWaysController(url, optionAirports, wayAirports);
-    window.location.href = "http://localhost:3000/" + wayPath;
+  // set variables with data from ajax response
+  request.complete(function(response) {
+    var data = response.responseJSON;
+    optionAirports = data.optionAirports;
+    wayAirports = data.wayAttributes;
+    origin.attribute = data.origin_attribute;
+    origin.airport = wayAirports[origin.attribute];
+    destination_attribute = data.destination_attribute;
+
+    setCurrentLocationAsCentre(map, wayAirports, origin.attribute);
+
+    createWayMarkers(map, wayAirports, wayAirportMarkers, icon.wayIcon, infowindow);
+    createOptionMarkers(map, optionAirports, optionAirportMarkers, icon.optionIcon, infowindow, flightPath, origin, destination_attribute);
+
+    setUpForms(wayAirports);
+    var wayPath = getWayPath();
+
+    $("#btn-submit").click( function(event) {
+      event.preventDefault();
+      formSubmit(wayAirports);
+      revertForm(wayAirports);
+      deleteMarkers(wayAirportMarkers);
+      deleteMarkers(optionAirportMarkers);
+      // var url = wayPath + ".json";
+      // getDataFromWaysController(url, optionAirports, wayAirports);
+      // window.location.href = "http://localhost:3000/" + wayPath;
+    });
+
   });
 });

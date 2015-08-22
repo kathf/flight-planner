@@ -1,6 +1,14 @@
+function setUpForms(wayAirports) {
+  console.log("set up forms to respond to map clicks");
 
+  $.each(wayAirports, function(airportID){
+    formSetUp("#" + airportID + "-name");
+    autocomplete(airportID);
+  });
+};
 
 function formSetUp( element ) {
+  console.log("form focus");
   $( element ).focusin(function() {
     var presentValue = this.value;
     this.value = '';
@@ -13,8 +21,10 @@ function formSetUp( element ) {
 }
 
 function autocomplete(input) {
-  var nameInput = "#" + input + "-name"
-  var idInput = "#" + input + "-id"
+  console.log("form autocomplete");
+  var nameInput = "#" + input + "-name";
+  var idInput = "#" + input + "-id";
+
   $( nameInput ).autocomplete({
     minLength: 2,
     source: "/airports/search.json",
@@ -32,22 +42,24 @@ function autocomplete(input) {
     };
 }
 
-function formSubmit() {
-  $("#airport01-name").attr('disabled', 'true');
-  $("#airport02-name").attr('disabled', 'true');
+function formSubmit(wayAirports) {
+  $.each(wayAirports, function(airport){
+    $("#" + airport + "-name").attr('disabled', 'true');
+  });
   $('.edit_way').submit();
 }
 
-function revertForm() {
-  $("#airport01-name").removeAttr('disabled');
-  $("#airport02-name").removeAttr('disabled');
+function revertForm(wayAirports) {
+  $.each(wayAirports, function(airport){
+    $("#" + airport + "-name").removeAttr('disabled');
+  });
 }
-
-function insertOriginInForm(origin) {
-  console.log("insert origin in form");
-  $("#airport01-name").val(origin.name);
-  $("#airport01-id").val(origin.id);
-}
+//
+// function insertOriginInForm(origin) {
+//   console.log("insert origin in form");
+//   $("#airport01-name").val(origin.name);
+//   $("#airport01-id").val(origin.id);
+// }
 
 function getWayPath() {
   wayFormAction = $('.edit_way').attr("action");

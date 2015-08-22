@@ -1,7 +1,10 @@
-function setUpForms(wayAirports) {
+function setUpForms(wayAirports, destination_attribute) {
   console.log("set up forms to respond to map clicks");
 
-  $.each(wayAirports, function(airportID){
+  formSetUp("#" + destination_attribute + "-name");
+  autocomplete(destination_attribute);
+
+  $.each(wayAirports, function(airportID, airport){
     formSetUp("#" + airportID + "-name");
     autocomplete(airportID);
   });

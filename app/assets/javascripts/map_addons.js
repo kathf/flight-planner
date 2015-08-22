@@ -141,7 +141,6 @@ function setFlightPathCoords(flightPath, origin, marker) {
 
 function deleteMarkers(markers) {
   $.each(markers, function(i,marker) {
-    console.log(marker);
     marker.setMap(null);
   });
   markers = [];

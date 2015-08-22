@@ -46,11 +46,11 @@ $(window).load(function () {
     destination_attribute = data.destination_attribute;
 
     setCurrentLocationAsCentre(map, wayAirports, origin.attribute);
+    setUpForms(wayAirports, destination_attribute);
 
     createWayMarkers(map, wayAirports, wayAirportMarkers, icon.wayIcon, infowindow);
     createOptionMarkers(map, optionAirports, optionAirportMarkers, icon.optionIcon, infowindow, flightPath, origin, destination_attribute);
 
-    setUpForms(wayAirports);
     var wayPath = getWayPath();
 
     $("#btn-submit").click( function(event) {
